@@ -180,15 +180,73 @@ const TRANSLATIONS: Record<LangKey, string[]> = {
 
 function Index() {
   const [selected, setSelected] = useState<LangKey | null>(null);
+  const [stopped, setStopped] = useState(false);
 
   return (
     <div className="min-h-screen bg-[hsl(150,20%,97%)]">
       <BrandHeader />
-      {selected ? (
-        <TranslationView lang={selected} onStop={() => setSelected(null)} />
+      {stopped ? (
+        <StoppedView
+          onHome={() => {
+            setStopped(false);
+            setSelected(null);
+          }}
+        />
+      ) : selected ? (
+        <TranslationView lang={selected} onStop={() => setStopped(true)} />
       ) : (
         <LanguagePicker onPick={setSelected} />
       )}
+    </div>
+  );
+}
+
+function StoppedView({ onHome }: { onHome: () => void }) {
+  return (
+    <div className="relative mx-auto flex min-h-[calc(100vh-64px)] max-w-md flex-col items-center px-5 pb-10">
+      <img
+        src={aalimLogo.url}
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute right-[-30px] top-0 h-56 w-56 opacity-[0.07]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-32 top-32 h-80 w-80 rounded-full"
+        style={{ background: "radial-gradient(closest-side, hsl(160,55%,75%,0.35), transparent 70%)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 bottom-10 h-72 w-72 rounded-full"
+        style={{ background: "radial-gradient(closest-side, hsl(160,55%,80%,0.3), transparent 70%)" }}
+      />
+
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center text-center">
+        <h1 className="text-[34px] font-extrabold leading-tight tracking-tight text-[hsl(160,40%,12%)]">
+          Translation Stopped
+        </h1>
+        <div className="mt-4 flex items-center gap-2">
+          <span className="h-px w-16 bg-gradient-to-r from-transparent to-[hsl(160,55%,40%)]/40" />
+          <span className="text-[hsl(160,55%,40%)]">✦</span>
+          <span className="h-px w-16 bg-gradient-to-l from-transparent to-[hsl(160,55%,40%)]/40" />
+        </div>
+        <p className="mt-8 text-[16px] leading-relaxed text-muted-foreground">
+          Jazakallah for using <span className="font-semibold text-[hsl(160,40%,18%)]">Aalim</span>.
+          <br />
+          See you next time.
+        </p>
+      </div>
+
+      <button
+        onClick={onHome}
+        className="relative z-10 mb-4 inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-3.5 text-[15px] font-semibold text-[hsl(160,40%,15%)] shadow-[0_8px_24px_-10px_rgba(20,80,50,0.25)] ring-1 ring-black/5 transition active:scale-95"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[hsl(160,55%,35%)]">
+          <path d="M3 12 12 3l9 9" />
+          <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" />
+        </svg>
+        Go to Home
+      </button>
     </div>
   );
 }
