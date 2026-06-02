@@ -1,5 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import aalimLogo from "@/assets/aalim-logo.png.asset.json";
+
+function BrandHeader() {
+  return (
+    <div className="mx-auto flex max-w-md items-center gap-2 px-5 pt-4 pb-3">
+      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white shadow-sm ring-1 ring-border">
+        <img src={aalimLogo.url} alt="Aalim logo" className="h-6 w-6 object-contain" />
+      </div>
+      <span className="text-lg font-bold tracking-tight text-foreground">Aalim</span>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -158,6 +170,7 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-[hsl(150,20%,97%)]">
+      <BrandHeader />
       {selected ? (
         <TranslationView lang={selected} onStop={() => setSelected(null)} />
       ) : (
@@ -169,7 +182,7 @@ function Index() {
 
 function LanguagePicker({ onPick }: { onPick: (l: LangKey) => void }) {
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col px-5 pt-10 pb-8">
+    <div className="mx-auto flex max-w-md flex-col px-5 pt-4 pb-8">
       <div className="mb-8 text-center">
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[hsl(160,55%,40%)] text-white shadow-lg">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
