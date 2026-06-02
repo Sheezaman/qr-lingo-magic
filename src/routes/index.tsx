@@ -29,25 +29,24 @@ type LangKey =
   | "urdu"
   | "turkish"
   | "hindi"
-  | "malayalam"
-  | "kannada"
-  | "spanish"
-  | "french"
-  | "sundanese"
+  | "bangladeshi"
   | "indonesian"
-  | "chinese";
+  | "malayalam"
+  | "chinese"
+  | "sundanese"
+  | "kannada"
+  ;
 
 const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[] = [
   { key: "urdu", label: "Urdu", native: "اردو", flag: "🇵🇰" },
   { key: "turkish", label: "Turkish", native: "Türkçe", flag: "🇹🇷" },
   { key: "hindi", label: "Hindi", native: "हिन्दी", flag: "🇮🇳" },
-  { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
-  { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
-  { key: "spanish", label: "Spanish", native: "Español", flag: "🇪🇸" },
-  { key: "french", label: "French", native: "Français", flag: "🇫🇷" },
-  { key: "sundanese", label: "Sundanese", native: "Basa Sunda", flag: "🇮🇩" },
+  { key: "bangladeshi", label: "Bangladeshi", native: "বাংলা", flag: "🇧🇩" },
   { key: "indonesian", label: "Indonesian", native: "Bahasa Indonesia", flag: "🇮🇩" },
+  { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
   { key: "chinese", label: "Chinese", native: "中文", flag: "🇨🇳" },
+  { key: "sundanese", label: "Sundanese", native: "Basa Sunda", flag: "🇮🇩" },
+  { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
 ];
 
 // Source phrases (Arabic) with translations per language.
@@ -113,25 +112,15 @@ const TRANSLATIONS: Record<LangKey, string[]> = {
     "ಫಿರ್ಔನನ ಬಳಿಗೆ ಹೋಗಿ, ಅವನು ಮಿತಿಮೀರಿದ್ದಾನೆ",
     "ಅವನೊಡನೆ ಮೃದುವಾಗಿ ಮಾತನಾಡಿ, ಬಹುಶಃ ಅವನು ಬೋಧನೆ ಪಡೆಯಬಹುದು",
   ],
-  spanish: [
-    "Mataste a un alma, y te salvamos de la angustia",
-    "Permaneciste años entre la gente de Madián",
-    "Luego viniste en el momento decretado, oh Moisés",
-    "Y te he elegido para Mí mismo",
-    "Id tú y tu hermano con Mis signos",
-    "Y no flaqueéis en recordarme",
-    "Id ambos al Faraón, en verdad se ha excedido",
-    "Habladle con palabras suaves, quizá recapacite",
-  ],
-  french: [
-    "Tu avais tué un homme, et Nous t'avons sauvé du chagrin",
-    "Tu es resté des années parmi les habitants de Madyan",
-    "Puis tu es venu, ô Moïse, selon un décret",
-    "Et Je t'ai choisi pour Moi-Même",
-    "Pars, toi et ton frère, avec Mes signes",
-    "Et ne négligez pas Mon rappel",
-    "Allez tous deux vers Pharaon, il a vraiment dépassé les bornes",
-    "Parlez-lui avec douceur, peut-être se souviendra-t-il",
+  bangladeshi: [
+    "তুমি একটি প্রাণ হত্যা করেছিলে, অতঃপর আমি তোমাকে দুঃখ থেকে মুক্তি দিয়েছিলাম",
+    "অতঃপর তুমি মাদইয়ানবাসীদের মধ্যে বহু বছর অবস্থান করেছিলে",
+    "এরপর হে মূসা, তুমি নির্ধারিত সময়ে এসেছ",
+    "আমি তোমাকে আমার নিজের জন্য তৈরি করেছি",
+    "তুমি ও তোমার ভাই আমার নিদর্শনাবলি নিয়ে যাও",
+    "আমার স্মরণে শৈথিল্য করো না",
+    "তোমরা উভয়ে ফিরআউনের কাছে যাও, সে সীমালঙ্ঘন করেছে",
+    "তার সাথে নম্রভাবে কথা বলো, হয়তো সে উপদেশ গ্রহণ করবে",
   ],
   sundanese: [
     "Anjeun parantos maéhan hiji jalma, sareng Kami nyalametkeun anjeun tina kasedih",
@@ -182,37 +171,49 @@ function Index() {
 
 function LanguagePicker({ onPick }: { onPick: (l: LangKey) => void }) {
   return (
-    <div className="mx-auto flex max-w-md flex-col px-5 pt-4 pb-8">
-      <div className="mb-8 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[hsl(160,55%,40%)] text-white shadow-lg">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m5 8 6 6" />
-            <path d="m4 14 6-6 2-3" />
-            <path d="M2 5h12" />
-            <path d="M7 2h1" />
-            <path d="m22 22-5-10-5 10" />
-            <path d="M14 18h6" />
-          </svg>
+    <div className="relative mx-auto flex max-w-md flex-col px-5 pt-2 pb-8">
+      {/* Faded mosque silhouette in top-right */}
+      <img
+        src={aalimLogo.url}
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute right-[-40px] top-2 h-56 w-56 opacity-[0.06]"
+      />
+      {/* Soft green arc bottom-left */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full"
+        style={{ background: "radial-gradient(closest-side, hsl(160,55%,75%,0.35), transparent 70%)" }}
+      />
+
+      <div className="relative mb-6 mt-6 text-center">
+        <div className="mx-auto inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-[hsl(160,55%,30%)] shadow-sm ring-1 ring-[hsl(160,55%,40%)]/15">
+          <span className="h-1.5 w-1.5 rounded-full bg-[hsl(160,55%,40%)]" />
+          Live Translation
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Live Translation</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Choose your language to begin</p>
+        <h1 className="mt-4 text-[40px] font-extrabold leading-[1.05] tracking-tight text-[hsl(160,40%,12%)]">
+          Live Translation
+        </h1>
+        <p className="mt-3 text-[15px] text-muted-foreground">Choose your language to begin</p>
       </div>
 
-      <div className="flex-1 space-y-2.5">
+      <div className="relative flex-1 space-y-3">
         {LANGUAGES.map((l) => (
           <button
             key={l.key}
             onClick={() => onPick(l.key)}
-            className="flex w-full items-center justify-between rounded-2xl border border-border bg-card px-4 py-3.5 text-left shadow-sm transition-all active:scale-[0.98] hover:border-[hsl(160,55%,40%)]"
+            className="flex w-full items-center justify-between rounded-2xl bg-card px-4 py-3.5 text-left shadow-[0_2px_10px_-4px_rgba(20,40,30,0.08)] ring-1 ring-black/5 transition-all active:scale-[0.98] hover:ring-[hsl(160,55%,40%)]/40"
           >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl leading-none">{l.flag}</span>
+            <div className="flex items-center gap-3.5">
+              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-2xl leading-none ring-1 ring-black/5 bg-muted">
+                {l.flag}
+              </span>
               <div>
-                <div className="text-sm font-medium text-foreground">{l.label}</div>
+                <div className="text-[15px] font-semibold text-foreground">{l.label}</div>
                 <div className="text-xs text-muted-foreground">{l.native}</div>
               </div>
             </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[hsl(160,55%,40%)]">
               <path d="m9 18 6-6-6-6" />
             </svg>
           </button>
