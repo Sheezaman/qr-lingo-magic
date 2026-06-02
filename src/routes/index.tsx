@@ -35,6 +35,8 @@ type LangKey =
   | "chinese"
   | "sundanese"
   | "kannada"
+  | "spanish"
+  | "french"
   ;
 
 const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[] = [
@@ -47,6 +49,8 @@ const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[]
   { key: "chinese", label: "Chinese", native: "中文", flag: "🇨🇳" },
   { key: "sundanese", label: "Sundanese", native: "Basa Sunda", flag: "🇮🇩" },
   { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
+  { key: "spanish", label: "Spanish", native: "Español", flag: "🇪🇸" },
+  { key: "french", label: "French", native: "Français", flag: "🇫🇷" },
 ];
 
 // Source phrases (Arabic) with translations per language.
