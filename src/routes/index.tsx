@@ -29,25 +29,24 @@ type LangKey =
   | "urdu"
   | "turkish"
   | "hindi"
-  | "malayalam"
-  | "kannada"
-  | "spanish"
-  | "french"
-  | "sundanese"
+  | "bangladeshi"
   | "indonesian"
-  | "chinese";
+  | "malayalam"
+  | "chinese"
+  | "sundanese"
+  | "kannada"
+  ;
 
 const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[] = [
   { key: "urdu", label: "Urdu", native: "اردو", flag: "🇵🇰" },
   { key: "turkish", label: "Turkish", native: "Türkçe", flag: "🇹🇷" },
   { key: "hindi", label: "Hindi", native: "हिन्दी", flag: "🇮🇳" },
-  { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
-  { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
-  { key: "spanish", label: "Spanish", native: "Español", flag: "🇪🇸" },
-  { key: "french", label: "French", native: "Français", flag: "🇫🇷" },
-  { key: "sundanese", label: "Sundanese", native: "Basa Sunda", flag: "🇮🇩" },
+  { key: "bangladeshi", label: "Bangladeshi", native: "বাংলা", flag: "🇧🇩" },
   { key: "indonesian", label: "Indonesian", native: "Bahasa Indonesia", flag: "🇮🇩" },
+  { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
   { key: "chinese", label: "Chinese", native: "中文", flag: "🇨🇳" },
+  { key: "sundanese", label: "Sundanese", native: "Basa Sunda", flag: "🇮🇩" },
+  { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
 ];
 
 // Source phrases (Arabic) with translations per language.
