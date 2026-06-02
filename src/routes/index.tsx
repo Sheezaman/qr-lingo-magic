@@ -156,6 +156,26 @@ const TRANSLATIONS: Record<LangKey, string[]> = {
     "你俩到法老那里去,他确已暴虐",
     "你俩对他说温和的话,也许他会觉悟",
   ],
+  spanish: [
+    "Mataste a un hombre y te salvamos de la angustia",
+    "Luego permaneciste varios años entre la gente de Madián",
+    "Después viniste en el momento previsto, oh Moisés",
+    "Y te he elegido para Mí",
+    "Id tú y tu hermano con Mis signos",
+    "Y no flaqueéis en Mi recuerdo",
+    "Id ambos al Faraón, pues se ha excedido",
+    "Habladle con suavidad, quizás recapacite",
+  ],
+  french: [
+    "Tu as tué un homme et Nous t'avons sauvé de l'angoisse",
+    "Puis tu es resté des années parmi les gens de Madyan",
+    "Ensuite tu es venu au moment fixé, ô Moïse",
+    "Et Je t'ai choisi pour Moi-même",
+    "Pars, toi et ton frère, avec Mes signes",
+    "Et ne négligez pas Mon rappel",
+    "Allez tous deux vers Pharaon, car il s'est révolté",
+    "Parlez-lui avec douceur, peut-être se rappellera-t-il",
+  ],
 };
 
 function Index() {
