@@ -302,4 +302,3 @@ function TranslationView({ lang, onStop }: { lang: LangKey; onStop: () => void }
     </div>
   );
 }
-}
