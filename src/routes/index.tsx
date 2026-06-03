@@ -242,7 +242,7 @@ function Index() {
   const [stopped, setStopped] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[hsl(150,20%,97%)]">
+    <div className="min-h-screen overflow-x-hidden bg-[hsl(150,20%,97%)]">
       <BrandHeader />
       {stopped ? (
         <StoppedView
@@ -312,13 +312,13 @@ function StoppedView({ onHome }: { onHome: () => void }) {
 
 function LanguagePicker({ onPick }: { onPick: (l: LangKey) => void }) {
   return (
-    <div className="relative mx-auto flex max-w-md flex-col px-5 pt-2 pb-8">
+    <div className="relative mx-auto flex max-w-md flex-col overflow-hidden px-5 pt-2 pb-8">
       {/* Faded mosque silhouette in top-right */}
       <img
         src={aalimLogo.url}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute right-[-40px] top-2 h-56 w-56 opacity-[0.06]"
+        className="pointer-events-none absolute right-0 top-2 h-56 w-56 opacity-[0.06]"
       />
       {/* Soft green arc bottom-left */}
       <div
