@@ -33,11 +33,15 @@ type LangKey =
   | "indonesian"
   | "malayalam"
   | "chinese"
-  | "sundanese"
+  | "farsi"
   | "kannada"
   | "spanish"
   | "french"
-  ;
+  | "albanian"
+  | "russian"
+  | "malay"
+  | "pashto"
+  | "dari";
 
 const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[] = [
   { key: "urdu", label: "Urdu", native: "اردو", flag: "🇵🇰" },
@@ -47,10 +51,15 @@ const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[]
   { key: "indonesian", label: "Indonesian", native: "Bahasa Indonesia", flag: "🇮🇩" },
   { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
   { key: "chinese", label: "Chinese", native: "中文", flag: "🇨🇳" },
-  { key: "sundanese", label: "Sundanese", native: "Basa Sunda", flag: "🇮🇩" },
+  { key: "farsi", label: "Farsi", native: "فارسی", flag: "🇮🇷" },
   { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
   { key: "spanish", label: "Spanish", native: "Español", flag: "🇪🇸" },
   { key: "french", label: "French", native: "Français", flag: "🇫🇷" },
+  { key: "albanian", label: "Albanian", native: "Shqip", flag: "🇦🇱" },
+  { key: "russian", label: "Russian", native: "Русский", flag: "🇷🇺" },
+  { key: "malay", label: "Malaysian", native: "Bahasa Melayu", flag: "🇲🇾" },
+  { key: "pashto", label: "Pashto", native: "پښتو", flag: "🇦🇫" },
+  { key: "dari", label: "Dari", native: "دری", flag: "🇦🇫" },
 ];
 
 // Source phrases (Arabic) with translations per language.
@@ -126,15 +135,15 @@ const TRANSLATIONS: Record<LangKey, string[]> = {
     "তোমরা উভয়ে ফিরআউনের কাছে যাও, সে সীমালঙ্ঘন করেছে",
     "তার সাথে নম্রভাবে কথা বলো, হয়তো সে উপদেশ গ্রহণ করবে",
   ],
-  sundanese: [
-    "Anjeun parantos maéhan hiji jalma, sareng Kami nyalametkeun anjeun tina kasedih",
-    "Anjeun cicing mangtaun-taun di antara warga Madyan",
-    "Teras anjeun sumping dina waktosna, nun Musa",
-    "Sareng Kuring milih anjeun pikeun diri Kuring",
-    "Angkat anjeun sareng dulur anjeun nyandak tanda-tanda Kuring",
-    "Tong lalawora dina nyebut Kuring",
-    "Angkat duaan ka Fir'aun, anjeunna parantos ngalangkungan wates",
-    "Carioskeun ka anjeunna kalayan lemes, sugan anjeunna émut",
+  farsi: [
+    "تو یک نفر را کشتی و ما تو را از اندوه نجات دادیم",
+    "سپس سال‌ها در میان مردم مدین ماندی",
+    "آن‌گاه در زمان مقدر آمدی، ای موسی",
+    "و تو را برای خودم برگزیدم",
+    "تو و برادرت با نشانه‌های من بروید",
+    "و در یاد من سستی نکنید",
+    "هر دو نزد فرعون بروید، که او سرکشی کرده است",
+    "با او به نرمی سخن بگویید، شاید پند گیرد",
   ],
   indonesian: [
     "Kamu pernah membunuh seseorang, lalu Kami menyelamatkanmu dari kesusahan",
@@ -175,6 +184,56 @@ const TRANSLATIONS: Record<LangKey, string[]> = {
     "Et ne négligez pas Mon rappel",
     "Allez tous deux vers Pharaon, car il s'est révolté",
     "Parlez-lui avec douceur, peut-être se rappellera-t-il",
+  ],
+  albanian: [
+    "Ti vrave një njeri dhe Ne të shpëtuam nga brengat",
+    "Pastaj qëndrove vite të tëra ndër banorët e Medjenit",
+    "Mandej erdhe në kohën e caktuar, o Musa",
+    "Dhe Unë të zgjodha për Vete",
+    "Shko ti dhe vëllai yt me shenjat e Mia",
+    "Dhe mos u bëni të plogët në përmendjen Time",
+    "Shkoni të dy te Faraoni, ai ka tejkaluar çdo kufi",
+    "Flitini atij me fjalë të buta, ndoshta merr mësim",
+  ],
+  russian: [
+    "Ты убил человека, и Мы спасли тебя от скорби",
+    "Затем ты провёл годы среди жителей Мадьяна",
+    "Потом ты пришёл в назначенный срок, о Муса",
+    "И Я избрал тебя для Себя",
+    "Ступайте ты и твой брат с Моими знамениями",
+    "И не будьте нерадивы в поминании Меня",
+    "Идите оба к Фараону, ибо он преступил границы",
+    "Говорите с ним мягко, быть может, он образумится",
+  ],
+  malay: [
+    "Kamu telah membunuh seseorang, lalu Kami menyelamatkanmu dari kesusahan",
+    "Kemudian kamu tinggal beberapa tahun di kalangan penduduk Madyan",
+    "Setelah itu kamu datang pada waktu yang ditetapkan, wahai Musa",
+    "Dan Aku telah memilihmu untuk diri-Ku",
+    "Pergilah kamu dan saudaramu membawa tanda-tanda-Ku",
+    "Dan janganlah kamu berdua lalai dalam mengingati-Ku",
+    "Pergilah kamu berdua kepada Firaun, sesungguhnya dia telah melampaui batas",
+    "Bercakaplah kepadanya dengan lemah lembut, mudah-mudahan dia ingat",
+  ],
+  pashto: [
+    "تا یو کس وواژه، نو موږ ته له غمه خلاص کړې",
+    "بیا ته د مدین په خلکو کې کلونه پاتې شوې",
+    "بیا ای موسی! په ټاکلې نېټه راغلې",
+    "او ما ته د خپل ځان لپاره غوره کړې",
+    "ته او ستا ورور زما د نښو سره لاړ شئ",
+    "او زما په یاد کې سستي مه کوئ",
+    "دواړه فرعون ته لاړ شئ، هغه سرکشي کړې ده",
+    "ورته په نرمۍ خبرې وکړئ، ښایي پند واخلي",
+  ],
+  dari: [
+    "تو یک نفر را کشتی و ما تو را از غم نجات دادیم",
+    "سپس سال‌ها در میان مردم مدین زندگی کردی",
+    "بعد ای موسی! در زمان مقرر آمدی",
+    "و تو را برای خود برگزیدم",
+    "تو و برادرت با نشانه‌های من بروید",
+    "و در یاد من سستی نورزید",
+    "هر دو نزد فرعون بروید، که او سرکشی کرده است",
+    "با او به نرمی سخن بگویید، شاید پند بگیرد",
   ],
 };
 
