@@ -33,11 +33,15 @@ type LangKey =
   | "indonesian"
   | "malayalam"
   | "chinese"
-  | "sundanese"
+  | "farsi"
   | "kannada"
   | "spanish"
   | "french"
-  ;
+  | "albanian"
+  | "russian"
+  | "malay"
+  | "pashto"
+  | "dari";
 
 const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[] = [
   { key: "urdu", label: "Urdu", native: "اردو", flag: "🇵🇰" },
@@ -47,10 +51,15 @@ const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[]
   { key: "indonesian", label: "Indonesian", native: "Bahasa Indonesia", flag: "🇮🇩" },
   { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
   { key: "chinese", label: "Chinese", native: "中文", flag: "🇨🇳" },
-  { key: "sundanese", label: "Sundanese", native: "Basa Sunda", flag: "🇮🇩" },
+  { key: "farsi", label: "Farsi", native: "فارسی", flag: "🇮🇷" },
   { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
   { key: "spanish", label: "Spanish", native: "Español", flag: "🇪🇸" },
   { key: "french", label: "French", native: "Français", flag: "🇫🇷" },
+  { key: "albanian", label: "Albanian", native: "Shqip", flag: "🇦🇱" },
+  { key: "russian", label: "Russian", native: "Русский", flag: "🇷🇺" },
+  { key: "malay", label: "Malaysian", native: "Bahasa Melayu", flag: "🇲🇾" },
+  { key: "pashto", label: "Pashto", native: "پښتو", flag: "🇦🇫" },
+  { key: "dari", label: "Dari", native: "دری", flag: "🇦🇫" },
 ];
 
 // Source phrases (Arabic) with translations per language.
