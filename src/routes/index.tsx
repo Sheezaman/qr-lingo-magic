@@ -26,6 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 type LangKey =
+  | "english"
   | "urdu"
   | "turkish"
   | "hindi"
@@ -44,6 +45,7 @@ type LangKey =
   | "dari";
 
 const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[] = [
+  { key: "english", label: "English", native: "English", flag: "🇬🇧" },
   { key: "urdu", label: "Urdu", native: "اردو", flag: "🇵🇰" },
   { key: "turkish", label: "Turkish", native: "Türkçe", flag: "🇹🇷" },
   { key: "hindi", label: "Hindi", native: "हिन्दी", flag: "🇮🇳" },
@@ -75,6 +77,16 @@ const SOURCE_PHRASES = [
 ];
 
 const TRANSLATIONS: Record<LangKey, string[]> = {
+  english: [
+    "And you killed a soul, and We saved you from grief",
+    "Then you stayed years among the people of Madyan",
+    "Then you came at the appointed time, O Moses",
+    "And I have chosen you for Myself",
+    "Go, you and your brother, with My signs",
+    "And do not be lax in My remembrance",
+    "Go both of you to Pharaoh, indeed he has transgressed",
+    "Speak to him gently, that perhaps he may take heed",
+  ],
   urdu: [
     "اور تم نے ایک جان کو مار ڈالا تو ہم نے تمہیں غم سے نجات دی",
     "پھر تم کئی سال اہلِ مدین میں ٹھہرے رہے",
