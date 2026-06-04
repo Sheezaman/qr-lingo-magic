@@ -26,6 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 type LangKey =
+  | "english"
   | "urdu"
   | "turkish"
   | "hindi"
