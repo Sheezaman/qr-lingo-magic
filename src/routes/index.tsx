@@ -45,6 +45,7 @@ type LangKey =
   | "dari";
 
 const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[] = [
+  { key: "english", label: "English", native: "English", flag: "🇬🇧" },
   { key: "urdu", label: "Urdu", native: "اردو", flag: "🇵🇰" },
   { key: "turkish", label: "Turkish", native: "Türkçe", flag: "🇹🇷" },
   { key: "hindi", label: "Hindi", native: "हिन्दी", flag: "🇮🇳" },
