@@ -35,7 +35,7 @@ type LangKey =
   | "malayalam"
   | "chinese"
   | "farsi"
-  | "kannada"
+  
   | "spanish"
   | "french"
   | "albanian"
