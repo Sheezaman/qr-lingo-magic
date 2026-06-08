@@ -54,7 +54,6 @@ const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[]
   { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
   { key: "chinese", label: "Chinese", native: "中文", flag: "🇨🇳" },
   { key: "farsi", label: "Farsi", native: "فارسی", flag: "🇮🇷" },
-  { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
   { key: "spanish", label: "Spanish", native: "Español", flag: "🇪🇸" },
   { key: "french", label: "French", native: "Français", flag: "🇫🇷" },
   { key: "albanian", label: "Albanian", native: "Shqip", flag: "🇦🇱" },
