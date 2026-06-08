@@ -35,7 +35,7 @@ type LangKey =
   | "malayalam"
   | "chinese"
   | "farsi"
-  | "kannada"
+  
   | "spanish"
   | "french"
   | "albanian"
@@ -54,7 +54,6 @@ const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[]
   { key: "malayalam", label: "Malayalam", native: "മലയാളം", flag: "🇮🇳" },
   { key: "chinese", label: "Chinese", native: "中文", flag: "🇨🇳" },
   { key: "farsi", label: "Farsi", native: "فارسی", flag: "🇮🇷" },
-  { key: "kannada", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
   { key: "spanish", label: "Spanish", native: "Español", flag: "🇪🇸" },
   { key: "french", label: "French", native: "Français", flag: "🇫🇷" },
   { key: "albanian", label: "Albanian", native: "Shqip", flag: "🇦🇱" },
@@ -126,16 +125,6 @@ const TRANSLATIONS: Record<LangKey, string[]> = {
     "എന്നെ ഓർക്കുന്നതിൽ അലസത കാണിക്കരുത്",
     "ഫിർഔനിന്റെ അടുത്തേക്ക് പോകൂ, അവൻ അതിക്രമം കാട്ടിയിരിക്കുന്നു",
     "അവനോട് മൃദുവായി സംസാരിക്കൂ, അവൻ ഉപദേശം സ്വീകരിച്ചേക്കാം",
-  ],
-  kannada: [
-    "ನೀನು ಒಂದು ಜೀವವನ್ನು ಕೊಂದೆ, ನಾವು ನಿನ್ನನ್ನು ದುಃಖದಿಂದ ಪಾರು ಮಾಡಿದೆವು",
-    "ಆಮೇಲೆ ನೀನು ಮದ್ಯನ್ ಜನರಲ್ಲಿ ಹಲವು ವರ್ಷ ಇದ್ದೆ",
-    "ನಂತರ ನಿಗದಿತ ಸಮಯಕ್ಕೆ ಬಂದೆ, ಓ ಮೂಸಾ",
-    "ನಾನು ನಿನ್ನನ್ನು ನನಗಾಗಿ ಆಯ್ಕೆ ಮಾಡಿಕೊಂಡೆ",
-    "ನೀನು ಮತ್ತು ನಿನ್ನ ಸಹೋದರ ನನ್ನ ಸಂಕೇತಗಳೊಂದಿಗೆ ಹೋಗಿ",
-    "ನನ್ನ ಸ್ಮರಣೆಯಲ್ಲಿ ಆಲಸ್ಯ ಬಿಡಬೇಡಿ",
-    "ಫಿರ್ಔನನ ಬಳಿಗೆ ಹೋಗಿ, ಅವನು ಮಿತಿಮೀರಿದ್ದಾನೆ",
-    "ಅವನೊಡನೆ ಮೃದುವಾಗಿ ಮಾತನಾಡಿ, ಬಹುಶಃ ಅವನು ಬೋಧನೆ ಪಡೆಯಬಹುದು",
   ],
   bangladeshi: [
     "তুমি একটি প্রাণ হত্যা করেছিলে, অতঃপর আমি তোমাকে দুঃখ থেকে মুক্তি দিয়েছিলাম",
