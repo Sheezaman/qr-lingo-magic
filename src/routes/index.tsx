@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import aalimLogo from "@/assets/aalim-logo.png.asset.json";
 
 function BrandHeader() {
@@ -274,7 +274,7 @@ function Index() {
     setVoiceStarted(false);
   };
 
-  let content: React.ReactNode;
+  let content: ReactNode;
   if (stopped) {
     content = <StoppedView onHome={reset} />;
   } else if (!selected) {
