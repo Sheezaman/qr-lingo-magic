@@ -467,6 +467,20 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => {
+                setPaused(false);
+                setIndex(0);
+              }}
+              aria-label="Start from the beginning"
+              title="Start from the beginning"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[hsl(160,55%,35%)] shadow-sm ring-1 ring-black/5 transition active:scale-95"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 12a9 9 0 1 0 3-6.7" />
+                <path d="M3 4v5h5" />
+              </svg>
+            </button>
+            <button
               onClick={() => setPaused((p) => !p)}
               disabled={finished}
               aria-label={paused ? "Play" : "Pause"}
