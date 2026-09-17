@@ -238,28 +238,297 @@ const TRANSLATIONS: Record<LangKey, string[]> = {
   ],
 };
 
+const HEADPHONE_PROMPT: Record<LangKey, string> = {
+  english: "Please connect your headphones or earphones and start hearing the live voice translation.",
+  urdu: "براہ کرم اپنے ہیڈ فون یا ائیرفون لگائیں اور لائیو صوتی ترجمہ سننا شروع کریں۔",
+  turkish: "Lütfen kulaklığınızı takın ve canlı sesli çeviriyi dinlemeye başlayın.",
+  hindi: "कृपया अपने हेडफ़ोन या ईयरफ़ोन कनेक्ट करें और लाइव वॉइस अनुवाद सुनना शुरू करें।",
+  bangladeshi: "অনুগ্রহ করে আপনার হেডফোন বা ইয়ারফোন সংযুক্ত করুন এবং লাইভ ভয়েস অনুবাদ শোনা শুরু করুন।",
+  indonesian: "Silakan sambungkan headphone atau earphone Anda dan mulai mendengarkan terjemahan suara langsung.",
+  malayalam: "ദയവായി നിങ്ങളുടെ ഹെഡ്‌ഫോൺ അല്ലെങ്കിൽ ഇയർഫോൺ ബന്ധിപ്പിച്ച് തത്സമയ ശബ്ദ വിവർത്തനം കേൾക്കാൻ തുടങ്ങുക.",
+  chinese: "请连接您的耳机,开始收听实时语音翻译。",
+  farsi: "لطفاً هدفون یا ایرفون خود را وصل کنید و شنیدن ترجمه صوتی زنده را آغاز کنید.",
+  spanish: "Por favor, conecta tus auriculares y comienza a escuchar la traducción de voz en vivo.",
+  french: "Veuillez connecter vos écouteurs et commencer à écouter la traduction vocale en direct.",
+  albanian: "Ju lutemi lidhni kufjet tuaja dhe filloni të dëgjoni përkthimin zanor live.",
+  russian: "Пожалуйста, подключите наушники и начните слушать живой голосовой перевод.",
+  malay: "Sila sambungkan fon kepala atau fon telinga anda dan mula mendengar terjemahan suara secara langsung.",
+  pashto: "مهرباني وکړئ خپل هیډفون یا ایرفون ونښلوئ او ژوندۍ غږیزه ژباړه اورېدل پیل کړئ.",
+  dari: "لطفاً هدفون یا ایرفون خود را وصل کنید و شنیدن ترجمه صوتی زنده را شروع کنید.",
+};
+
+const RTL_LANGS: LangKey[] = ["urdu", "farsi", "pashto", "dari"];
+
+type Mode = "text" | "voice";
+
 function Index() {
   const [selected, setSelected] = useState<LangKey | null>(null);
+  const [mode, setMode] = useState<Mode | null>(null);
+  const [voiceStarted, setVoiceStarted] = useState(false);
   const [stopped, setStopped] = useState(false);
+
+  const reset = () => {
+    setStopped(false);
+    setSelected(null);
+    setMode(null);
+    setVoiceStarted(false);
+  };
+
+  let content: React.ReactNode;
+  if (stopped) {
+    content = <StoppedView onHome={reset} />;
+  } else if (!selected) {
+    content = <LanguagePicker onPick={setSelected} />;
+  } else if (!mode) {
+    content = <ModePicker lang={selected} onPick={setMode} onBack={reset} />;
+  } else if (mode === "text") {
+    content = <TranslationView lang={selected} onStop={() => setStopped(true)} />;
+  } else if (!voiceStarted) {
+    content = <VoiceIntro lang={selected} onStart={() => setVoiceStarted(true)} onBack={() => setMode(null)} />;
+  } else {
+    content = <VoiceTranslationView lang={selected} onStop={() => setStopped(true)} />;
+  }
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[hsl(150,20%,97%)]">
       <BrandHeader />
-      {stopped ? (
-        <StoppedView
-          onHome={() => {
-            setStopped(false);
-            setSelected(null);
-          }}
-        />
-      ) : selected ? (
-        <TranslationView lang={selected} onStop={() => setStopped(true)} />
-      ) : (
-        <LanguagePicker onPick={setSelected} />
-      )}
+      {content}
     </div>
   );
 }
+
+function ModePicker({ lang, onPick, onBack }: { lang: LangKey; onPick: (m: Mode) => void; onBack: () => void }) {
+  const meta = LANGUAGES.find((l) => l.key === lang)!;
+  return (
+    <div className="relative mx-auto flex min-h-[calc(100vh-64px)] max-w-md flex-col px-5 pb-10">
+      <div className="mt-10 text-center">
+        <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-[hsl(160,55%,30%)] shadow-sm ring-1 ring-[hsl(160,55%,40%)]/15">
+          <span>{meta.flag}</span>
+          {meta.label}
+        </div>
+        <h1 className="mt-4 text-[32px] font-extrabold leading-tight tracking-tight text-[hsl(160,40%,12%)]">
+          How would you like to follow?
+        </h1>
+        <p className="mt-3 text-[15px] text-muted-foreground">Choose text or voice translation</p>
+      </div>
+
+      <div className="mt-8 space-y-4">
+        <button
+          onClick={() => onPick("text")}
+          className="flex w-full items-center gap-4 rounded-2xl bg-card px-5 py-5 text-left shadow-[0_2px_10px_-4px_rgba(20,40,30,0.08)] ring-1 ring-black/5 transition active:scale-[0.98]"
+        >
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[hsl(160,55%,40%)]/10 text-[hsl(160,55%,35%)]">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M4 6h16M4 12h16M4 18h10" />
+            </svg>
+          </span>
+          <span>
+            <span className="block text-[16px] font-semibold text-foreground">Text translation</span>
+            <span className="block text-xs text-muted-foreground">Read the translation live on screen</span>
+          </span>
+        </button>
+
+        <button
+          onClick={() => onPick("voice")}
+          className="flex w-full items-center gap-4 rounded-2xl bg-card px-5 py-5 text-left shadow-[0_2px_10px_-4px_rgba(20,40,30,0.08)] ring-1 ring-black/5 transition active:scale-[0.98]"
+        >
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[hsl(160,55%,40%)]/10 text-[hsl(160,55%,35%)]">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+              <path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z" />
+            </svg>
+          </span>
+          <span>
+            <span className="block text-[16px] font-semibold text-foreground">Voice translation</span>
+            <span className="block text-xs text-muted-foreground">Listen to the live translation with text</span>
+          </span>
+        </button>
+      </div>
+
+      <button onClick={onBack} className="mx-auto mt-auto pt-10 text-sm font-medium text-muted-foreground">
+        Change language
+      </button>
+    </div>
+  );
+}
+
+function VoiceIntro({ lang, onStart, onBack }: { lang: LangKey; onStart: () => void; onBack: () => void }) {
+  const meta = LANGUAGES.find((l) => l.key === lang)!;
+  const rtl = RTL_LANGS.includes(lang);
+  return (
+    <div className="relative mx-auto flex min-h-[calc(100vh-64px)] max-w-md flex-col items-center px-5 pb-10 text-center">
+      <div className="mt-14 flex h-20 w-20 items-center justify-center rounded-full bg-[hsl(160,55%,40%)]/10 text-[hsl(160,55%,35%)]">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+          <path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z" />
+        </svg>
+      </div>
+
+      {lang !== "english" && (
+        <p
+          dir={rtl ? "rtl" : "ltr"}
+          className="mt-8 text-[18px] font-semibold leading-relaxed text-[hsl(160,40%,14%)]"
+        >
+          {HEADPHONE_PROMPT[lang]}
+        </p>
+      )}
+      <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+        {HEADPHONE_PROMPT.english}
+      </p>
+
+      <button
+        onClick={onStart}
+        className="mt-10 inline-flex items-center gap-2 rounded-full bg-[hsl(160,55%,35%)] px-8 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_-10px_rgba(20,80,50,0.5)] transition active:scale-95"
+      >
+        Start voice translation
+        <span className="text-xs opacity-80">{meta.flag}</span>
+      </button>
+
+      <button onClick={onBack} className="mt-auto pt-10 text-sm font-medium text-muted-foreground">
+        Back
+      </button>
+    </div>
+  );
+}
+
+function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => void }) {
+  const meta = LANGUAGES.find((l) => l.key === lang)!;
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const pausedRef = useRef(false);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (paused) audio.pause();
+    else void audio.play().catch(() => {});
+  }, [paused]);
+
+  useEffect(() => {
+    if (index >= SOURCE_PHRASES.length) return;
+    let cancelled = false;
+    let url: string | null = null;
+
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: TRANSLATIONS[lang][index] }),
+        });
+        if (!res.ok) throw new Error(await res.text().catch(() => "Voice failed"));
+        const blob = await res.blob();
+        if (cancelled) return;
+        url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audioRef.current = audio;
+        audio.onended = () => setIndex((i) => i + 1);
+        setLoading(false);
+        if (!pausedRef.current) await audio.play().catch(() => {});
+      } catch (e) {
+        if (cancelled) return;
+        setLoading(false);
+        setError("Could not play the voice translation. Please try again.");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      audioRef.current?.pause();
+      audioRef.current = null;
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [index, lang]);
+
+  const finished = index >= SOURCE_PHRASES.length;
+  const currentIdx = Math.min(index, SOURCE_PHRASES.length - 1);
+  const rtl = RTL_LANGS.includes(lang);
+
+  return (
+    <div className="mx-auto flex min-h-[calc(100vh-64px)] max-w-md flex-col">
+      <header className="sticky top-0 z-10 border-b border-border/60 bg-[hsl(150,20%,97%)]/90 px-5 py-3 backdrop-blur">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              {!paused && !finished && (
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[hsl(160,55%,40%)] opacity-60" />
+              )}
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[hsl(160,55%,40%)]" />
+            </span>
+            <span className="text-sm font-medium text-foreground">
+              {finished ? "Finished" : paused ? "Paused" : loading ? "Preparing audio…" : "Speaking…"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPaused((p) => !p)}
+              disabled={finished}
+              aria-label={paused ? "Play" : "Pause"}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[hsl(160,55%,35%)] text-white shadow-sm transition active:scale-95 disabled:opacity-40"
+            >
+              {paused ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
+              )}
+            </button>
+            <div className="flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 text-xs font-medium text-foreground shadow-sm">
+              <span>{meta.flag}</span>
+              <span>{meta.label}</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-8 text-center">
+        <div className="mb-6 flex items-end gap-1.5">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              className="w-1.5 rounded-full bg-[hsl(160,55%,40%)]"
+              style={{
+                height: paused || finished ? 10 : 14 + ((i * 11) % 26),
+                opacity: paused || finished ? 0.35 : 0.9,
+                transition: "height 300ms ease",
+              }}
+            />
+          ))}
+        </div>
+
+        <p dir="rtl" className="font-arabic text-[17px] leading-relaxed text-muted-foreground/80">
+          {SOURCE_PHRASES[currentIdx]}
+        </p>
+        <p
+          dir={rtl ? "rtl" : "ltr"}
+          className="mt-4 text-[20px] font-semibold leading-snug text-foreground"
+        >
+          {TRANSLATIONS[lang][currentIdx]}
+        </p>
+
+        {error && <p className="mt-6 text-sm text-destructive">{error}</p>}
+        {finished && <p className="mt-6 text-sm text-muted-foreground">The live session has ended.</p>}
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 mx-auto max-w-md px-4 pb-5">
+        <div className="flex justify-center">
+          <button
+            onClick={onStop}
+            className="rounded-full bg-[hsl(0,80%,96%)] px-8 py-3 text-sm font-semibold text-[hsl(0,75%,50%)] shadow-sm transition active:scale-95"
+          >
+            Stop Translating
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function StoppedView({ onHome }: { onHome: () => void }) {
   return (
