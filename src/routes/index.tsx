@@ -399,6 +399,16 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pausedRef = useRef(false);
+  const liveStartRef = useRef(Date.now());
+
+  const goLive = () => {
+    const liveIdx = Math.min(
+      Math.floor((Date.now() - liveStartRef.current) / 2600),
+      SOURCE_PHRASES.length
+    );
+    setPaused(false);
+    setIndex(liveIdx);
+  };
 
   useEffect(() => {
     pausedRef.current = paused;
@@ -491,6 +501,19 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
               ) : (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
               )}
+            </button>
+            <button
+              onClick={goLive}
+              disabled={finished}
+              aria-label="Go to live translation"
+              title="Go to live translation"
+              className="flex items-center gap-1.5 rounded-full bg-white px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-[hsl(160,55%,35%)] shadow-sm ring-1 ring-black/5 transition active:scale-95 disabled:opacity-40"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <circle cx="12" cy="12" r="2" fill="currentColor" />
+                <path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14" />
+              </svg>
+              Live
             </button>
             <div className="flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 text-xs font-medium text-foreground shadow-sm">
               <span>{meta.flag}</span>
