@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import aalimLogo from "@/assets/aalim-logo.png.asset.json";
+import khutbahLine1 from "@/assets/khutbah/line-1.wav";
+import khutbahLine2 from "@/assets/khutbah/line-2.wav";
+import khutbahLine3 from "@/assets/khutbah/line-3.wav";
+import khutbahLine4 from "@/assets/khutbah/line-4.wav";
+import khutbahLine5 from "@/assets/khutbah/line-5.wav";
+import khutbahLine6 from "@/assets/khutbah/line-6.wav";
 
 function BrandHeader() {
   return (
@@ -63,178 +69,152 @@ const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[]
   { key: "dari", label: "Dari", native: "دری", flag: "🇦🇫" },
 ];
 
-// Source phrases (Arabic) with translations per language.
+// Real khutbah recording: one audio file per line, with duration (seconds).
+const KHUTBAH_AUDIO = [khutbahLine1, khutbahLine2, khutbahLine3, khutbahLine4, khutbahLine5, khutbahLine6];
+const KHUTBAH_DURATIONS = [10.32, 11.08, 10.2, 8.6, 7.84, 12.12];
+const KHUTBAH_STARTS = KHUTBAH_DURATIONS.reduce<number[]>((acc, d, i) => {
+  acc.push(i === 0 ? 0 : acc[i - 1] + KHUTBAH_DURATIONS[i - 1]);
+  return acc;
+}, []);
+
+// Source khutbah lines (Arabic) with translations per language.
 const SOURCE_PHRASES = [
-  "وَقُلتُ نَفْسًا فَنَجَّينَاكَ مِنَ الْغَمِّ",
-  "فَلَبِثْتَ سِنِينَ فِي أَهْلِ مَدْيَنَ",
-  "ثُمَّ جِئْتَ عَلَىٰ قَدَرٍ يَا مُوسَىٰ",
-  "وَاصْطَنَعْتُكَ لِنَفْسِي",
-  "اذْهَبْ أَنتَ وَأَخُوكَ بِآيَاتِي",
-  "وَلَا تَنِيَا فِي ذِكْرِي",
-  "اذْهَبَا إِلَىٰ فِرْعَوْنَ إِنَّهُ طَغَىٰ",
-  "فَقُولَا لَهُ قَوْلًا لَّيِّنًا لَّعَلَّهُ يَتَذَكَّرُ",
+  "إِنَّ الْحَمْدَ لِلَّهِ نَحْمَدُهُ وَنَسْتَعِينُهُ وَنَسْتَغْفِرُهُ",
+  "وَنَعُوذُ بِاللَّهِ مِنْ شُرُورِ أَنْفُسِنَا وَمِنْ سَيِّئَاتِ أَعْمَالِنَا",
+  "مَنْ يَهْدِهِ اللَّهُ فَلَا مُضِلَّ لَهُ وَمَنْ يُضْلِلْ فَلَا هَادِيَ لَهُ",
+  "أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+  "وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
+  "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ حَقَّ تُقَاتِهِ وَلَا تَمُوتُنَّ إِلَّا وَأَنْتُمْ مُسْلِمُونَ",
 ];
 
 const TRANSLATIONS: Record<LangKey, string[]> = {
   english: [
-    "And you killed a soul, and We saved you from grief",
-    "Then you stayed years among the people of Madyan",
-    "Then you came at the appointed time, O Moses",
-    "And I have chosen you for Myself",
-    "Go, you and your brother, with My signs",
-    "And do not be lax in My remembrance",
-    "Go both of you to Pharaoh, indeed he has transgressed",
-    "Speak to him gently, that perhaps he may take heed",
+    "All praise is due to Allah; we praise Him, seek His help, and seek His forgiveness.",
+    "We seek refuge in Allah from the evil of our souls and from our bad deeds.",
+    "Whoever Allah guides, none can mislead; and whoever He leaves astray, none can guide.",
+    "I bear witness that there is no god but Allah alone, without any partner.",
+    "And I bear witness that Muhammad is His servant and messenger.",
+    "O you who believe, fear Allah as He should be feared, and do not die except as Muslims.",
   ],
   urdu: [
-    "اور تم نے ایک جان کو مار ڈالا تو ہم نے تمہیں غم سے نجات دی",
-    "پھر تم کئی سال اہلِ مدین میں ٹھہرے رہے",
-    "پھر اے موسیٰ تم مقررہ وقت پر آئے",
-    "اور میں نے تمہیں اپنے لیے بنایا",
-    "تم اور تمہارا بھائی میری نشانیاں لے کر جاؤ",
-    "اور میرے ذکر میں سستی نہ کرو",
-    "فرعون کے پاس جاؤ، بے شک وہ سرکش ہو گیا ہے",
-    "اس سے نرمی سے بات کرو، شاید وہ نصیحت پکڑے",
+    "تمام تعریف اللہ کے لیے ہے؛ ہم اس کی حمد کرتے ہیں، اسی سے مدد مانگتے ہیں اور اسی سے مغفرت طلب کرتے ہیں۔",
+    "ہم اپنے نفسوں کے شر اور اپنے برے اعمال سے اللہ کی پناہ مانگتے ہیں۔",
+    "جسے اللہ ہدایت دے اسے کوئی گمراہ نہیں کر سکتا، اور جسے وہ گمراہی میں چھوڑ دے اسے کوئی ہدایت نہیں دے سکتا۔",
+    "میں گواہی دیتا ہوں کہ اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں۔",
+    "اور میں گواہی دیتا ہوں کہ محمد اس کے بندے اور رسول ہیں۔",
+    "اے ایمان والو! اللہ سے ڈرو جیسے اس سے ڈرنا چاہیے، اور مسلمانوں کی حالت میں ہی مرنا۔",
   ],
   turkish: [
-    "Bir cana kıymıştın da seni o tasadan kurtardık",
-    "Sonra Medyen halkı arasında yıllarca kaldın",
-    "Sonra takdir edilmiş bir vakitte geldin, ey Musa",
-    "Ve seni kendim için seçtim",
-    "Sen ve kardeşin ayetlerimle gidin",
-    "Beni anmakta gevşeklik göstermeyin",
-    "Firavun'a gidin, çünkü o azdı",
-    "Ona yumuşak söz söyleyin, belki öğüt alır",
+    "Hamd Allah'a mahsustur; O'na hamd eder, O'ndan yardım diler ve O'ndan bağışlanma dileriz.",
+    "Nefislerimizin kötülüklerinden ve kötü amellerimizden Allah'a sığınırız.",
+    "Allah kimi hidayete erdirirse onu kimse saptıramaz; kimi saptırırsa onu kimse hidayete erdiremez.",
+    "Şahitlik ederim ki Allah'tan başka ilah yoktur; O birdir, ortağı yoktur.",
+    "Ve şahitlik ederim ki Muhammed O'nun kulu ve elçisidir.",
+    "Ey iman edenler! Allah'tan gerektiği gibi korkun ve ancak Müslümanlar olarak ölün.",
   ],
   hindi: [
-    "और तुमने एक जान ले ली थी, फिर हमने तुम्हें ग़म से छुड़ाया",
-    "फिर तुम मदयन वालों में कई बरस ठहरे",
-    "फिर तुम तय समय पर आए, ऐ मूसा",
-    "और मैंने तुम्हें अपने लिए चुन लिया",
-    "तुम और तुम्हारा भाई मेरी निशानियाँ लेकर जाओ",
-    "और मेरे ज़िक्र में सुस्ती मत करना",
-    "फ़िरऔन के पास जाओ, वह सरकश हो गया है",
-    "उससे नर्मी से बात करना, शायद वह नसीहत पकड़े",
+    "सारी प्रशंसा अल्लाह के लिए है; हम उसकी प्रशंसा करते हैं, उसी से मदद माँगते हैं और उसी से क्षमा माँगते हैं।",
+    "हम अपनी नफ़्सों की बुराइयों और अपने बुरे कर्मों से अल्लाह की शरण माँगते हैं।",
+    "जिसे अल्लाह मार्गदर्शन दे, उसे कोई भटका नहीं सकता; और जिसे वह भटकाए, उसे कोई मार्ग नहीं दिखा सकता।",
+    "मैं गवाही देता हूँ कि अल्लाह के सिवा कोई उपास्य नहीं; वह अकेला है, उसका कोई साझी नहीं।",
+    "और मैं गवाही देता हूँ कि मुहम्मद उसके बंदे और रसूल हैं।",
+    "ऐ ईमानवालो! अल्लाह से डरो जैसे उससे डरना चाहिए, और मुसलमानों की अवस्था में ही मरना।",
   ],
   malayalam: [
-    "നീ ഒരു ജീവനെ കൊല്ലുകയും ഞങ്ങൾ നിന്നെ ദുഃഖത്തിൽ നിന്ന് രക്ഷിക്കുകയും ചെയ്തു",
-    "അവൻ മദ്‌യനിലെ ജനങ്ങളിൽ വർഷങ്ങളോളം താമസിച്ചു",
-    "പിന്നെ നീ എന്റെ വിധിയിലേക്ക് വന്നു, ഹേ മൂസാ",
-    "ഞാൻ നിന്നെ എനിക്കു വേണ്ടി തിരഞ്ഞെടുത്തു",
-    "നീയും നിന്റെ സഹോദരനും എന്റെ ദൃഷ്ടാന്തങ്ങളുമായി പോകൂ",
-    "എന്നെ ഓർക്കുന്നതിൽ അലസത കാണിക്കരുത്",
-    "ഫിർഔനിന്റെ അടുത്തേക്ക് പോകൂ, അവൻ അതിക്രമം കാട്ടിയിരിക്കുന്നു",
-    "അവനോട് മൃദുവായി സംസാരിക്കൂ, അവൻ ഉപദേശം സ്വീകരിച്ചേക്കാം",
+    "എല്ലാ പ്രശംസയും അല്ലാഹുവിനാണ്; ഞങ്ങൾ അവനെ സ്തുതിക്കുകയും അവന്റെ സഹായം തേടുകയും അവന്റെ ക്ഷമ അപേക്ഷിക്കുകയും ചെയ്യുന്നു.",
+    "ഞങ്ങളുടെ ആത്മാക്കളുടെ ദോഷത്തിൽ നിന്നും ഞങ്ങളുടെ ചെയ്തികളുടെ തിന്മകളിൽ നിന്നും ഞങ്ങൾ അല്ലാഹുവിൽ അഭയം തേടുന്നു.",
+    "അല്ലാഹു ആർക്ക് മാർഗ്ഗദർശനം നൽകുന്നുവോ അവനെ ആരും വഴിതെറ്റിക്കാനാവില്ല; ആരെ അവൻ വഴിപിഴപ്പിക്കുന്നുവോ അവനെ ആരും നേർവഴിയിലേക്ക് നടത്താനാവില്ല.",
+    "അല്ലാഹുവല്ലാതെ ആരാധ്യനില്ലെന്നും അവൻ ഒറ്റനാണെന്നും അവന് കൂട്ടാളികളില്ലെന്നും ഞാൻ സാക്ഷ്യം വഹിക്കുന്നു.",
+    "മുഹമ്മദ് അവന്റെ ദാസനും ദൂതനുമാണെന്നും ഞാൻ സാക്ഷ്യം വഹിക്കുന്നു.",
+    "സത്യവിശ്വാസികളേ, അല്ലാഹുവിനെ അവനെ ഭയപ്പെടേണ്ടതുപോലെ ഭയപ്പെടുവിൻ; മുസ്ലിമുകളായിട്ടല്ലാതെ മരിക്കരുത്.",
   ],
   bangladeshi: [
-    "তুমি একটি প্রাণ হত্যা করেছিলে, অতঃপর আমি তোমাকে দুঃখ থেকে মুক্তি দিয়েছিলাম",
-    "অতঃপর তুমি মাদইয়ানবাসীদের মধ্যে বহু বছর অবস্থান করেছিলে",
-    "এরপর হে মূসা, তুমি নির্ধারিত সময়ে এসেছ",
-    "আমি তোমাকে আমার নিজের জন্য তৈরি করেছি",
-    "তুমি ও তোমার ভাই আমার নিদর্শনাবলি নিয়ে যাও",
-    "আমার স্মরণে শৈথিল্য করো না",
-    "তোমরা উভয়ে ফিরআউনের কাছে যাও, সে সীমালঙ্ঘন করেছে",
-    "তার সাথে নম্রভাবে কথা বলো, হয়তো সে উপদেশ গ্রহণ করবে",
+    "সমস্ত প্রশংসা আল্লাহর; আমরা তাঁর প্রশংসা করি, তাঁর সাহায্য চাই এবং তাঁর ক্ষমা চাই।",
+    "আমরা আমাদের অন্তরের অনিষ্ট ও মন্দ আমল থেকে আল্লাহর আশ্রয় চাই।",
+    "আল্লাহ যাকে হেদায়েত দেন, তাকে কেউ বিপথগামী করতে পারে না; আর যাকে তিনি বিভ্রান্ত করেন, তাকে কেউ পথ দেখাতে পারে না।",
+    "আমি সাক্ষ্য দিই যে, আল্লাহ ছাড়া কোনো ইলাহ নেই; তিনি একক, তাঁর কোনো শরিক নেই।",
+    "এবং আমি সাক্ষ্য দিই যে, মুহাম্মদ তাঁর বান্দা ও রাসূল।",
+    "হে মুমিনগণ! আল্লাহকে যথাযথভাবে ভয় করো এবং মুসলিম অবস্থায় ছাড়া মৃত্যুবরণ করো না।",
   ],
   farsi: [
-    "تو یک نفر را کشتی و ما تو را از اندوه نجات دادیم",
-    "سپس سال‌ها در میان مردم مدین ماندی",
-    "آن‌گاه در زمان مقدر آمدی، ای موسی",
-    "و تو را برای خودم برگزیدم",
-    "تو و برادرت با نشانه‌های من بروید",
-    "و در یاد من سستی نکنید",
-    "هر دو نزد فرعون بروید، که او سرکشی کرده است",
-    "با او به نرمی سخن بگویید، شاید پند گیرد",
+    "تمام ستایش برای خداست؛ او را می‌ستاییم، از او یاری می‌جوییم و آمرزش او را می‌طلبیم.",
+    "از شرّ نفس‌های خود و از کارهای بد خود به خدا پناه می‌بریم.",
+    "هر کس را خدا هدایت کند، هیچ‌کس نمی‌تواند او را گمراه سازد؛ و هر کس را گمراه گذارد، هیچ‌کس نمی‌تواند او را هدایت کند.",
+    "گواهی می‌دهم که نیست معبودی جز خدا، او یگانه است و شریکی ندارد.",
+    "و گواهی می‌دهم که محمد بنده و فرستادهٔ اوست.",
+    "ای کسانی که ایمان آورده‌اید! از خدا آن‌گونه که سزاوار اوست بترسید و جز به حالت مسلمانی نمیرید.",
   ],
   indonesian: [
-    "Kamu pernah membunuh seseorang, lalu Kami menyelamatkanmu dari kesusahan",
-    "Kemudian kamu tinggal beberapa tahun di antara penduduk Madyan",
-    "Lalu kamu datang menurut waktu yang ditetapkan, hai Musa",
-    "Dan Aku telah memilihmu untuk diri-Ku",
-    "Pergilah engkau dan saudaramu dengan membawa tanda-tanda-Ku",
-    "Janganlah kamu berdua lalai dalam mengingat-Ku",
-    "Pergilah kamu berdua kepada Fir'aun, sungguh dia telah melampaui batas",
-    "Berbicaralah kepadanya dengan lemah lembut, mudah-mudahan dia ingat",
+    "Segala puji bagi Allah; kami memuji-Nya, meminta pertolongan-Nya, dan memohon ampunan-Nya.",
+    "Kami berlindung kepada Allah dari kejahatan diri kami dan dari amal perbuatan kami yang buruk.",
+    "Barang siapa diberi petunjuk oleh Allah, tidak ada yang dapat menyesatkannya; dan barang siapa disesatkan-Nya, tidak ada yang dapat memberinya petunjuk.",
+    "Aku bersaksi bahwa tidak ada tuhan selain Allah Yang Maha Esa, tidak ada sekutu bagi-Nya.",
+    "Dan aku bersaksi bahwa Muhammad adalah hamba dan utusan-Nya.",
+    "Wahai orang-orang yang beriman, bertakwalah kepada Allah dengan sebenar-benar takwa, dan janganlah kamu mati kecuali dalam keadaan Muslim.",
   ],
   chinese: [
-    "你曾杀了一个人,我就解救你脱离忧愁",
-    "你曾在麦德彦人中间逗留了许多年",
-    "穆萨啊!然后你按预定的时刻来到这里",
-    "我为自己拣选了你",
-    "你和你的兄弟,带着我的迹象去吧",
-    "你俩不要怠慢了记念我",
-    "你俩到法老那里去,他确已暴虐",
-    "你俩对他说温和的话,也许他会觉悟",
+    "一切赞颂全归安拉;我们赞颂他,祈求他的援助,祈求他的饶恕。",
+    "我们求安拉庇护,免遭我们自身的邪恶和恶劣行为的伤害。",
+    "安拉引导谁,谁就不会迷误;他使谁迷误,谁也引导不了谁。",
+    "我作证:除安拉外绝无应受崇拜的主宰,他是独一无二的,没有伙伴。",
+    "我作证:穆罕默德是安拉的仆人和使者。",
+    "信道的人们啊!你们应当真实地敬畏安拉,只应以顺服者的身份死亡。",
   ],
   spanish: [
-    "Mataste a un hombre y te salvamos de la angustia",
-    "Luego permaneciste varios años entre la gente de Madián",
-    "Después viniste en el momento previsto, oh Moisés",
-    "Y te he elegido para Mí",
-    "Id tú y tu hermano con Mis signos",
-    "Y no flaqueéis en Mi recuerdo",
-    "Id ambos al Faraón, pues se ha excedido",
-    "Habladle con suavidad, quizás recapacite",
+    "Toda alabanza es para Alá; lo alabamos, le pedimos ayuda y le pedimos perdón.",
+    "Nos refugiamos en Alá del mal de nuestras almas y de nuestras malas acciones.",
+    "A quien Alá guía, nadie puede desviarlo; y a quien Él desvía, nadie puede guiarlo.",
+    "Atestiguo que no hay dios más que Alá, Único, sin asociados.",
+    "Y atestiguo que Mahoma es Su siervo y mensajero.",
+    "¡Oh creyentes! Temed a Alá como debe ser temido y no muráis sino siendo musulmanes.",
   ],
   french: [
-    "Tu as tué un homme et Nous t'avons sauvé de l'angoisse",
-    "Puis tu es resté des années parmi les gens de Madyan",
-    "Ensuite tu es venu au moment fixé, ô Moïse",
-    "Et Je t'ai choisi pour Moi-même",
-    "Pars, toi et ton frère, avec Mes signes",
-    "Et ne négligez pas Mon rappel",
-    "Allez tous deux vers Pharaon, car il s'est révolté",
-    "Parlez-lui avec douceur, peut-être se rappellera-t-il",
+    "Louange à Allah ; nous Le louons, Lui demandons aide et Lui demandons pardon.",
+    "Nous cherchons refuge auprès d'Allah contre le mal de nos âmes et contre nos mauvaises actions.",
+    "Celui qu'Allah guide, nul ne peut l'égarer ; et celui qu'Il égare, nul ne peut le guider.",
+    "J'atteste qu'il n'y a de dieu qu'Allah, Unique, sans associé.",
+    "Et j'atteste que Muhammad est Son serviteur et Son messager.",
+    "Ô vous qui croyez ! Craignez Allah comme Il doit être craint et ne mourez qu'en étant musulmans.",
   ],
   albanian: [
-    "Ti vrave një njeri dhe Ne të shpëtuam nga brengat",
-    "Pastaj qëndrove vite të tëra ndër banorët e Medjenit",
-    "Mandej erdhe në kohën e caktuar, o Musa",
-    "Dhe Unë të zgjodha për Vete",
-    "Shko ti dhe vëllai yt me shenjat e Mia",
-    "Dhe mos u bëni të plogët në përmendjen Time",
-    "Shkoni të dy te Faraoni, ai ka tejkaluar çdo kufi",
-    "Flitini atij me fjalë të buta, ndoshta merr mësim",
+    "E gjithë lavdërimi i takon Allahut; Ne e lavdërojmë, prej Tij kërkojmë ndihmë dhe falje.",
+    "I kërkojmë mbrojtje Allahut nga e keqja e shpirtrave tanë dhe nga veprat tona të këqija.",
+    "Kë e udhëzon Allahu, askush s'mund ta humbasë; e kë e lë të humbur, askush s'mund ta udhëzojë.",
+    "Dëshmoj se nuk ka zot tjetër përveç Allahut, i Vetmi, pa asnjë ortak.",
+    "Dhe dëshmoj se Muhamedi është rob dhe i dërguar i Tij.",
+    "O besimtarë! Frikësojani Allahut siç i takon dhe mos vdisni veçse si muslimanë.",
   ],
   russian: [
-    "Ты убил человека, и Мы спасли тебя от скорби",
-    "Затем ты провёл годы среди жителей Мадьяна",
-    "Потом ты пришёл в назначенный срок, о Муса",
-    "И Я избрал тебя для Себя",
-    "Ступайте ты и твой брат с Моими знамениями",
-    "И не будьте нерадивы в поминании Меня",
-    "Идите оба к Фараону, ибо он преступил границы",
-    "Говорите с ним мягко, быть может, он образумится",
+    "Вся хвала принадлежит Аллаху; мы восхваляем Его, просим у Него помощи и прощения.",
+    "Мы ищем у Аллаха защиты от зла наших душ и от наших дурных дел.",
+    "Кого Аллах ведёт прямым путём, того никто не собьёт; а кого Он оставит в заблуждении, того никто не наставит.",
+    "Свидетельствую, что нет бога, кроме Аллаха, Единого, без сотоварищей.",
+    "И свидетельствую, что Мухаммад — Его раб и посланник.",
+    "О те, которые уверовали! Бойтесь Аллаха должным образом и умирайте только мусульманами.",
   ],
   malay: [
-    "Kamu telah membunuh seseorang, lalu Kami menyelamatkanmu dari kesusahan",
-    "Kemudian kamu tinggal beberapa tahun di kalangan penduduk Madyan",
-    "Setelah itu kamu datang pada waktu yang ditetapkan, wahai Musa",
-    "Dan Aku telah memilihmu untuk diri-Ku",
-    "Pergilah kamu dan saudaramu membawa tanda-tanda-Ku",
-    "Dan janganlah kamu berdua lalai dalam mengingati-Ku",
-    "Pergilah kamu berdua kepada Firaun, sesungguhnya dia telah melampaui batas",
-    "Bercakaplah kepadanya dengan lemah lembut, mudah-mudahan dia ingat",
+    "Segala puji bagi Allah; kami memuji-Nya, memohon pertolongan-Nya dan memohon ampun kepada-Nya.",
+    "Kami berlindung kepada Allah daripada kejahatan diri kami dan daripada amalan buruk kami.",
+    "Sesiapa yang diberi hidayah oleh Allah, tiada siapa dapat menyesatkannya; dan sesiapa yang disesatkan-Nya, tiada siapa dapat memberinya hidayah.",
+    "Aku bersaksi bahawa tiada tuhan melainkan Allah, Yang Maha Esa, tiada sekutu bagi-Nya.",
+    "Dan aku bersaksi bahawa Muhammad itu hamba dan utusan-Nya.",
+    "Wahai orang-orang yang beriman! Bertakwalah kepada Allah dengan sebenar-benar takwa dan janganlah kamu mati melainkan dalam keadaan Islam.",
   ],
   pashto: [
-    "تا یو کس وواژه، نو موږ ته له غمه خلاص کړې",
-    "بیا ته د مدین په خلکو کې کلونه پاتې شوې",
-    "بیا ای موسی! په ټاکلې نېټه راغلې",
-    "او ما ته د خپل ځان لپاره غوره کړې",
-    "ته او ستا ورور زما د نښو سره لاړ شئ",
-    "او زما په یاد کې سستي مه کوئ",
-    "دواړه فرعون ته لاړ شئ، هغه سرکشي کړې ده",
-    "ورته په نرمۍ خبرې وکړئ، ښایي پند واخلي",
+    "ټوله ستاینه الله ته ده؛ موږ ده ستايو، تر ده مرسته غواړو او بښنه تر ده غواړو.",
+    "موږ د خپلو نفسونو له شر او له خپلو بدو کړنو الله ته پناه وړو.",
+    "چا ته چې الله لار ورکړي، هېڅوک يې نشي بېلارې کولی؛ او څوک چې هغه بېلارې پرېږدي، هېڅوک يې نشي لار ته راوړلی.",
+    "زه ګواهي ورکوم چې له الله پرته بل هېڅ معبود نشته؛ هغه يو او بېشريک دی.",
+    "او ګواهي ورکوم چې محمد د هغه بنده او استازي دی.",
+    "ای مؤمنانو! له الله داسې ووېرېږئ لکه څنګه چې ده ته ورته سزا ده، او بیا له مسلمانۍ پرته مه مړ کېږئ.",
   ],
   dari: [
-    "تو یک نفر را کشتی و ما تو را از غم نجات دادیم",
-    "سپس سال‌ها در میان مردم مدین زندگی کردی",
-    "بعد ای موسی! در زمان مقرر آمدی",
-    "و تو را برای خود برگزیدم",
-    "تو و برادرت با نشانه‌های من بروید",
-    "و در یاد من سستی نورزید",
-    "هر دو نزد فرعون بروید، که او سرکشی کرده است",
-    "با او به نرمی سخن بگویید، شاید پند بگیرد",
+    "تمام ستایش برای خداوند است؛ ما او را می‌ستاییم، از او کمک می‌خواهیم و آمرزش او را می‌طلبیم.",
+    "از بدی نفس‌های خود و از اعمال بد خود به خدا پناه می‌بریم.",
+    "هر که را خداوند هدایت کند، کسی نمی‌تواند او را گمراه سازد؛ و هر که را گمراه گذارد، کسی نمی‌تواند او را راهنمایی کند.",
+    "شهادت می‌دهم که معبودی جز خداوند نیست؛ او یگانه است و شریکی ندارد.",
+    "و شهادت می‌دهم که محمد بنده و پیامبر اوست.",
+    "ای کسانی که ایمان آورده‌اید! از خداوند آن‌گونه که باید پروا کنید و جز مسلمان نمیرید.",
   ],
 };
 
@@ -395,17 +375,20 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const meta = LANGUAGES.find((l) => l.key === lang)!;
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pausedRef = useRef(false);
   const liveStartRef = useRef(Date.now());
 
   const goLive = () => {
-    const liveIdx = Math.min(
-      Math.floor((Date.now() - liveStartRef.current) / 2600),
-      SOURCE_PHRASES.length
-    );
+    const elapsed = (Date.now() - liveStartRef.current) / 1000;
+    let liveIdx = SOURCE_PHRASES.length;
+    for (let i = 0; i < KHUTBAH_STARTS.length; i++) {
+      if (elapsed < KHUTBAH_STARTS[i] + KHUTBAH_DURATIONS[i]) {
+        liveIdx = i;
+        break;
+      }
+    }
     setPaused(false);
     setIndex(liveIdx);
   };
@@ -420,39 +403,18 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
 
   useEffect(() => {
     if (index >= SOURCE_PHRASES.length) return;
-    let cancelled = false;
-    let url: string | null = null;
-
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: TRANSLATIONS[lang][index] }),
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => "Voice failed"));
-        const blob = await res.blob();
-        if (cancelled) return;
-        url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audioRef.current = audio;
-        audio.onended = () => setIndex((i) => i + 1);
-        setLoading(false);
-        if (!pausedRef.current) await audio.play().catch(() => {});
-      } catch (e) {
-        if (cancelled) return;
-        setLoading(false);
-        setError("Could not play the voice translation. Please try again.");
-      }
-    })();
+    setError(null);
+    const audio = new Audio(KHUTBAH_AUDIO[index]);
+    audioRef.current = audio;
+    audio.onended = () => setIndex((i) => i + 1);
+    audio.onerror = () => setError("Could not play the khutbah audio. Please try again.");
+    if (!pausedRef.current) void audio.play().catch(() => {});
 
     return () => {
-      cancelled = true;
-      audioRef.current?.pause();
-      audioRef.current = null;
-      if (url) URL.revokeObjectURL(url);
+      audio.pause();
+      audio.onended = null;
+      audio.onerror = null;
+      if (audioRef.current === audio) audioRef.current = null;
     };
   }, [index, lang]);
 
