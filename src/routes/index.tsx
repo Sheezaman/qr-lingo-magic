@@ -375,17 +375,20 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const meta = LANGUAGES.find((l) => l.key === lang)!;
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pausedRef = useRef(false);
   const liveStartRef = useRef(Date.now());
 
   const goLive = () => {
-    const liveIdx = Math.min(
-      Math.floor((Date.now() - liveStartRef.current) / 2600),
-      SOURCE_PHRASES.length
-    );
+    const elapsed = (Date.now() - liveStartRef.current) / 1000;
+    let liveIdx = SOURCE_PHRASES.length;
+    for (let i = 0; i < KHUTBAH_STARTS.length; i++) {
+      if (elapsed < KHUTBAH_STARTS[i] + KHUTBAH_DURATIONS[i]) {
+        liveIdx = i;
+        break;
+      }
+    }
     setPaused(false);
     setIndex(liveIdx);
   };
@@ -400,39 +403,18 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
 
   useEffect(() => {
     if (index >= SOURCE_PHRASES.length) return;
-    let cancelled = false;
-    let url: string | null = null;
-
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: TRANSLATIONS[lang][index] }),
-        });
-        if (!res.ok) throw new Error(await res.text().catch(() => "Voice failed"));
-        const blob = await res.blob();
-        if (cancelled) return;
-        url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audioRef.current = audio;
-        audio.onended = () => setIndex((i) => i + 1);
-        setLoading(false);
-        if (!pausedRef.current) await audio.play().catch(() => {});
-      } catch (e) {
-        if (cancelled) return;
-        setLoading(false);
-        setError("Could not play the voice translation. Please try again.");
-      }
-    })();
+    setError(null);
+    const audio = new Audio(KHUTBAH_AUDIO[index]);
+    audioRef.current = audio;
+    audio.onended = () => setIndex((i) => i + 1);
+    audio.onerror = () => setError("Could not play the khutbah audio. Please try again.");
+    if (!pausedRef.current) void audio.play().catch(() => {});
 
     return () => {
-      cancelled = true;
-      audioRef.current?.pause();
-      audioRef.current = null;
-      if (url) URL.revokeObjectURL(url);
+      audio.pause();
+      audio.onended = null;
+      audio.onerror = null;
+      if (audioRef.current === audio) audioRef.current = null;
     };
   }, [index, lang]);
 
