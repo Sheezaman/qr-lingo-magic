@@ -399,6 +399,16 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pausedRef = useRef(false);
+  const liveStartRef = useRef(Date.now());
+
+  const goLive = () => {
+    const liveIdx = Math.min(
+      Math.floor((Date.now() - liveStartRef.current) / 2600),
+      SOURCE_PHRASES.length
+    );
+    setPaused(false);
+    setIndex(liveIdx);
+  };
 
   useEffect(() => {
     pausedRef.current = paused;
