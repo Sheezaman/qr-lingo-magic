@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import aalimLogo from "@/assets/aalim-logo.png.asset.json";
+import khutbahLine1 from "@/assets/khutbah/line-1.wav";
+import khutbahLine2 from "@/assets/khutbah/line-2.wav";
+import khutbahLine3 from "@/assets/khutbah/line-3.wav";
+import khutbahLine4 from "@/assets/khutbah/line-4.wav";
+import khutbahLine5 from "@/assets/khutbah/line-5.wav";
+import khutbahLine6 from "@/assets/khutbah/line-6.wav";
 
 function BrandHeader() {
   return (
@@ -63,16 +69,22 @@ const LANGUAGES: { key: LangKey; label: string; native: string; flag: string }[]
   { key: "dari", label: "Dari", native: "دری", flag: "🇦🇫" },
 ];
 
-// Source phrases (Arabic) with translations per language.
+// Real khutbah recording: one audio file per line, with duration (seconds).
+const KHUTBAH_AUDIO = [khutbahLine1, khutbahLine2, khutbahLine3, khutbahLine4, khutbahLine5, khutbahLine6];
+const KHUTBAH_DURATIONS = [10.32, 11.08, 10.2, 8.6, 7.84, 12.12];
+const KHUTBAH_STARTS = KHUTBAH_DURATIONS.reduce<number[]>((acc, d, i) => {
+  acc.push(i === 0 ? 0 : acc[i - 1] + KHUTBAH_DURATIONS[i - 1]);
+  return acc;
+}, []);
+
+// Source khutbah lines (Arabic) with translations per language.
 const SOURCE_PHRASES = [
-  "وَقُلتُ نَفْسًا فَنَجَّينَاكَ مِنَ الْغَمِّ",
-  "فَلَبِثْتَ سِنِينَ فِي أَهْلِ مَدْيَنَ",
-  "ثُمَّ جِئْتَ عَلَىٰ قَدَرٍ يَا مُوسَىٰ",
-  "وَاصْطَنَعْتُكَ لِنَفْسِي",
-  "اذْهَبْ أَنتَ وَأَخُوكَ بِآيَاتِي",
-  "وَلَا تَنِيَا فِي ذِكْرِي",
-  "اذْهَبَا إِلَىٰ فِرْعَوْنَ إِنَّهُ طَغَىٰ",
-  "فَقُولَا لَهُ قَوْلًا لَّيِّنًا لَّعَلَّهُ يَتَذَكَّرُ",
+  "إِنَّ الْحَمْدَ لِلَّهِ نَحْمَدُهُ وَنَسْتَعِينُهُ وَنَسْتَغْفِرُهُ",
+  "وَنَعُوذُ بِاللَّهِ مِنْ شُرُورِ أَنْفُسِنَا وَمِنْ سَيِّئَاتِ أَعْمَالِنَا",
+  "مَنْ يَهْدِهِ اللَّهُ فَلَا مُضِلَّ لَهُ وَمَنْ يُضْلِلْ فَلَا هَادِيَ لَهُ",
+  "أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+  "وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
+  "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ حَقَّ تُقَاتِهِ وَلَا تَمُوتُنَّ إِلَّا وَأَنْتُمْ مُسْلِمُونَ",
 ];
 
 const TRANSLATIONS: Record<LangKey, string[]> = {
