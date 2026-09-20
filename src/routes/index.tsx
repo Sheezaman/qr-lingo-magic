@@ -212,9 +212,11 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
 
   const goLive = () => {
     const elapsed = (Date.now() - liveStartRef.current) / 1000;
+    const starts = VOICE_STARTS[lang];
+    const durations = VOICE_DURATIONS[lang];
     let liveIdx = SOURCE_PHRASES.length;
-    for (let i = 0; i < KHUTBAH_STARTS.length; i++) {
-      if (elapsed < KHUTBAH_STARTS[i] + KHUTBAH_DURATIONS[i]) {
+    for (let i = 0; i < starts.length; i++) {
+      if (elapsed < starts[i] + durations[i]) {
         liveIdx = i;
         break;
       }
@@ -234,7 +236,7 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   useEffect(() => {
     if (index >= SOURCE_PHRASES.length) return;
     setError(null);
-    const audio = new Audio(KHUTBAH_AUDIO[index]);
+    const audio = new Audio(VOICE_AUDIO[lang][index]);
     audioRef.current = audio;
     audio.onended = () => setIndex((i) => i + 1);
     audio.onerror = () => setError("Could not play the khutbah audio. Please try again.");
