@@ -1,12 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import aalimLogo from "@/assets/aalim-logo.png.asset.json";
-import khutbahLine1 from "@/assets/khutbah/line-1.wav";
-import khutbahLine2 from "@/assets/khutbah/line-2.wav";
-import khutbahLine3 from "@/assets/khutbah/line-3.wav";
-import khutbahLine4 from "@/assets/khutbah/line-4.wav";
-import khutbahLine5 from "@/assets/khutbah/line-5.wav";
-import khutbahLine6 from "@/assets/khutbah/line-6.wav";
+import { SOURCE_PHRASES, TRANSLATIONS, RTL_LANGS, type LangKey } from "@/lib/khutbah-data";
+import { VOICE_AUDIO, VOICE_DURATIONS, VOICE_STARTS } from "@/lib/khutbah-audio";
 
 function BrandHeader() {
   return (
