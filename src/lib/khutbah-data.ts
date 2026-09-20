@@ -28,7 +28,7 @@ export const SOURCE_PHRASES = [
   "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ حَقَّ تُقَاتِهِ وَلَا تَمُوتُنَّ إِلَّا وَأَنْتُمْ مُسْلِمُونَ",
 ];
 
-const TRANSLATIONS: Record<LangKey, string[]> = {
+export const TRANSLATIONS: Record<LangKey, string[]> = {
   english: [
     "All praise is due to Allah; we praise Him, seek His help, and seek His forgiveness.",
     "We seek refuge in Allah from the evil of our souls and from our bad deeds.",
