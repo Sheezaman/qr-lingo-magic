@@ -434,7 +434,7 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[hsl(160,55%,40%)]" />
             </span>
             <span className="text-sm font-medium text-foreground">
-              {finished ? "Finished" : paused ? "Paused" : loading ? "Preparing audio…" : "Speaking…"}
+              {finished ? "Finished" : paused ? "Paused" : "Speaking…"}
             </span>
           </div>
           <div className="flex items-center gap-2">
