@@ -640,7 +640,7 @@ function TranslationView({ lang, onStop }: { lang: LangKey; onStop: () => void }
 
   useEffect(() => {
     if (index >= SOURCE_PHRASES.length) return;
-    const t = setTimeout(() => setIndex((i) => i + 1), 2600);
+    const t = setTimeout(() => setIndex((i) => i + 1), 6000);
     return () => clearTimeout(t);
   }, [index]);
 
