@@ -1,17 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import aalimLogo from "@/assets/aalim-logo.png.asset.json";
+import aalimLogoBlend from "@/assets/aalim-logo-blend.png";
 import { SOURCE_PHRASES, TRANSLATIONS, RTL_LANGS, type LangKey } from "@/lib/khutbah-data";
-import { VOICE_AUDIO, VOICE_DURATIONS, VOICE_STARTS } from "@/lib/khutbah-audio";
+import { VOICE_AUDIO } from "@/lib/khutbah-audio";
 import { Button } from "@/components/ui/button";
 
-function BrandHeader() {
+function BrandHeader({ blend = false }: { blend?: boolean }) {
   return (
     <div className="mx-auto flex max-w-md items-center gap-2 px-5 pt-4 pb-3">
-      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white shadow-sm ring-1 ring-border">
-        <img src={aalimLogo.url} alt="Aalim logo" className="h-6 w-6 object-contain" />
-      </div>
-      <span className="text-lg font-bold tracking-tight text-foreground">Aalim</span>
+      {blend ? (
+        <>
+          <img src={aalimLogoBlend} alt="Aalim logo" className="h-7 w-7 object-contain" />
+          <span className="text-lg font-bold tracking-tight text-voice-active">Aalim</span>
+        </>
+      ) : (
+        <>
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white shadow-sm ring-1 ring-border">
+            <img src={aalimLogo.url} alt="Aalim logo" className="h-6 w-6 object-contain" />
+          </div>
+          <span className="text-lg font-bold tracking-tight text-foreground">Aalim</span>
+        </>
+      )}
     </div>
   );
 }
@@ -104,7 +114,7 @@ function Index() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[hsl(150,20%,97%)]">
-      <BrandHeader />
+      <BrandHeader blend={mode === "voice" && voiceStarted && !stopped} />
       {content}
     </div>
   );
@@ -211,22 +221,6 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pausedRef = useRef(false);
-  const liveStartRef = useRef(Date.now());
-
-  const goLive = () => {
-    const elapsed = (Date.now() - liveStartRef.current) / 1000;
-    const starts = VOICE_STARTS[lang];
-    const durations = VOICE_DURATIONS[lang];
-    let liveIdx = SOURCE_PHRASES.length;
-    for (let i = 0; i < starts.length; i++) {
-      if (elapsed < starts[i] + durations[i]) {
-        liveIdx = i;
-        break;
-      }
-    }
-    setPaused(false);
-    setIndex(liveIdx);
-  };
 
   useEffect(() => {
     pausedRef.current = paused;
@@ -256,51 +250,21 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const finished = index >= SOURCE_PHRASES.length;
   return (
      <div className="voice-stage mx-auto flex min-h-[calc(100svh-64px)] max-w-md flex-col overflow-hidden px-5">
-       <header className="flex items-center justify-center gap-3 pt-4" aria-label="Playback controls">
-             <Button
-               variant="outline"
-               size="icon"
-              onClick={() => {
-                setPaused(false);
-                setIndex(0);
-              }}
-              aria-label="Start from the beginning"
-              title="Start from the beginning"
-               className="h-11 w-11 rounded-full border-voice-line bg-card text-primary shadow-sm"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 12a9 9 0 1 0 3-6.7" />
-                <path d="M3 4v5h5" />
-              </svg>
-             </Button>
-             <Button
-              onClick={() => setPaused((p) => !p)}
-              disabled={finished}
-              aria-label={paused ? "Play" : "Pause"}
-               title={paused ? "Play" : "Pause"}
-               className="h-11 w-11 rounded-full bg-primary text-primary-foreground shadow-sm"
-            >
-              {paused ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
-              )}
-             </Button>
-             <Button
-               variant="outline"
-              onClick={goLive}
-              disabled={finished}
-              aria-label="Go to live translation"
-              title="Go to live translation"
-               className="h-11 rounded-full border-voice-line bg-card px-4 text-xs font-semibold text-primary shadow-sm"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                <circle cx="12" cy="12" r="2" fill="currentColor" />
-                <path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14" />
-              </svg>
-              Live
-             </Button>
-      </header>
+       <header className="flex items-center justify-center pt-4" aria-label="Playback controls">
+         <Button
+          onClick={() => setPaused((p) => !p)}
+          disabled={finished}
+          aria-label={paused ? "Play" : "Pause"}
+           title={paused ? "Play" : "Pause"}
+           className="h-11 w-11 rounded-full bg-primary text-primary-foreground shadow-sm"
+        >
+          {paused ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
+          )}
+         </Button>
+       </header>
 
        <div className="flex min-h-[230px] flex-1 items-center justify-center py-5">
          <div className={`voice-orb-halo ${paused || finished ? "voice-orb-still" : ""}`} aria-hidden="true">
