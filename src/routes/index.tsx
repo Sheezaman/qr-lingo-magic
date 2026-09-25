@@ -250,51 +250,21 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const finished = index >= SOURCE_PHRASES.length;
   return (
      <div className="voice-stage mx-auto flex min-h-[calc(100svh-64px)] max-w-md flex-col overflow-hidden px-5">
-       <header className="flex items-center justify-center gap-3 pt-4" aria-label="Playback controls">
-             <Button
-               variant="outline"
-               size="icon"
-              onClick={() => {
-                setPaused(false);
-                setIndex(0);
-              }}
-              aria-label="Start from the beginning"
-              title="Start from the beginning"
-               className="h-11 w-11 rounded-full border-voice-line bg-card text-primary shadow-sm"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 12a9 9 0 1 0 3-6.7" />
-                <path d="M3 4v5h5" />
-              </svg>
-             </Button>
-             <Button
-              onClick={() => setPaused((p) => !p)}
-              disabled={finished}
-              aria-label={paused ? "Play" : "Pause"}
-               title={paused ? "Play" : "Pause"}
-               className="h-11 w-11 rounded-full bg-primary text-primary-foreground shadow-sm"
-            >
-              {paused ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
-              )}
-             </Button>
-             <Button
-               variant="outline"
-              onClick={goLive}
-              disabled={finished}
-              aria-label="Go to live translation"
-              title="Go to live translation"
-               className="h-11 rounded-full border-voice-line bg-card px-4 text-xs font-semibold text-primary shadow-sm"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                <circle cx="12" cy="12" r="2" fill="currentColor" />
-                <path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14" />
-              </svg>
-              Live
-             </Button>
-      </header>
+       <header className="flex items-center justify-center pt-4" aria-label="Playback controls">
+         <Button
+          onClick={() => setPaused((p) => !p)}
+          disabled={finished}
+          aria-label={paused ? "Play" : "Pause"}
+           title={paused ? "Play" : "Pause"}
+           className="h-11 w-11 rounded-full bg-primary text-primary-foreground shadow-sm"
+        >
+          {paused ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
+          )}
+         </Button>
+       </header>
 
        <div className="flex min-h-[230px] flex-1 items-center justify-center py-5">
          <div className={`voice-orb-halo ${paused || finished ? "voice-orb-still" : ""}`} aria-hidden="true">
