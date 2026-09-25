@@ -1,17 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import aalimLogo from "@/assets/aalim-logo.png.asset.json";
+import aalimLogoBlend from "@/assets/aalim-logo-blend.png";
 import { SOURCE_PHRASES, TRANSLATIONS, RTL_LANGS, type LangKey } from "@/lib/khutbah-data";
-import { VOICE_AUDIO, VOICE_DURATIONS, VOICE_STARTS } from "@/lib/khutbah-audio";
+import { VOICE_AUDIO } from "@/lib/khutbah-audio";
 import { Button } from "@/components/ui/button";
 
-function BrandHeader() {
+function BrandHeader({ blend = false }: { blend?: boolean }) {
   return (
     <div className="mx-auto flex max-w-md items-center gap-2 px-5 pt-4 pb-3">
-      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white shadow-sm ring-1 ring-border">
-        <img src={aalimLogo.url} alt="Aalim logo" className="h-6 w-6 object-contain" />
-      </div>
-      <span className="text-lg font-bold tracking-tight text-foreground">Aalim</span>
+      {blend ? (
+        <>
+          <img src={aalimLogoBlend} alt="Aalim logo" className="h-7 w-7 object-contain" />
+          <span className="text-lg font-bold tracking-tight text-voice-active">Aalim</span>
+        </>
+      ) : (
+        <>
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white shadow-sm ring-1 ring-border">
+            <img src={aalimLogo.url} alt="Aalim logo" className="h-6 w-6 object-contain" />
+          </div>
+          <span className="text-lg font-bold tracking-tight text-foreground">Aalim</span>
+        </>
+      )}
     </div>
   );
 }
@@ -104,7 +114,7 @@ function Index() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[hsl(150,20%,97%)]">
-      <BrandHeader />
+      <BrandHeader blend={mode === "voice" && voiceStarted && !stopped} />
       {content}
     </div>
   );
