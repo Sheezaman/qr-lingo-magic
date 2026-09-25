@@ -59,9 +59,21 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-voice-line: var(--voice-line);
+  --color-voice-active: var(--voice-active);
+  --color-voice-stop-bg: var(--voice-stop-bg);
+  --color-voice-stop-border: var(--voice-stop-border);
 }
 
 :root {
+  --voice-line: oklch(0.93 0.018 165);
+  --voice-active: oklch(0.76 0.19 153);
+  --voice-stop-bg: oklch(0.99 0.015 15);
+  --voice-stop-border: oklch(0.96 0.03 15);
+  --voice-mint: oklch(0.92 0.09 160);
+  --voice-aqua: oklch(0.82 0.13 182);
+  --voice-lemon: oklch(0.91 0.12 102);
+  --voice-peach: oklch(0.86 0.11 65);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -98,6 +110,14 @@
 }
 
 .dark {
+  --voice-line: oklch(0.38 0.04 165);
+  --voice-active: oklch(0.76 0.19 153);
+  --voice-stop-bg: oklch(0.28 0.05 15);
+  --voice-stop-border: oklch(0.42 0.07 15);
+  --voice-mint: oklch(0.48 0.11 160);
+  --voice-aqua: oklch(0.45 0.1 182);
+  --voice-lemon: oklch(0.6 0.11 102);
+  --voice-peach: oklch(0.58 0.09 65);
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -130,6 +150,46 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+.voice-stage {
+  background: radial-gradient(ellipse 115% 52% at 50% 3%, var(--voice-mint), transparent 92%), var(--background);
+}
+
+.voice-orb-halo {
+  display: grid;
+  place-items: center;
+  width: min(78vw, 330px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklch, var(--voice-active) 38%, transparent) 0%, transparent 69%);
+  animation: voice-float 3.2s ease-in-out infinite;
+}
+
+.voice-orb {
+  width: 69%;
+  aspect-ratio: 1;
+  border: 3px solid color-mix(in oklch, var(--background) 85%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle at 22% 58%, var(--voice-peach), transparent 38%), radial-gradient(circle at 68% 23%, var(--voice-aqua), transparent 43%), radial-gradient(circle at 76% 78%, var(--voice-lemon), transparent 40%), var(--voice-mint);
+  box-shadow: 0 8px 24px color-mix(in oklch, var(--voice-active) 28%, transparent), inset 0 0 18px color-mix(in oklch, var(--background) 34%, transparent);
+  animation: voice-breathe 3.2s ease-in-out infinite;
+}
+
+.voice-orb-still, .voice-orb-still .voice-orb { animation-play-state: paused; }
+
+@keyframes voice-float {
+  0%, 100% { transform: translateY(10px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes voice-breathe {
+  0%, 100% { transform: scale(0.96); }
+  50% { transform: scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-orb-halo, .voice-orb { animation: none; }
 }
 
 @layer base {
