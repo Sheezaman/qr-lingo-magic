@@ -221,22 +221,6 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pausedRef = useRef(false);
-  const liveStartRef = useRef(Date.now());
-
-  const goLive = () => {
-    const elapsed = (Date.now() - liveStartRef.current) / 1000;
-    const starts = VOICE_STARTS[lang];
-    const durations = VOICE_DURATIONS[lang];
-    let liveIdx = SOURCE_PHRASES.length;
-    for (let i = 0; i < starts.length; i++) {
-      if (elapsed < starts[i] + durations[i]) {
-        liveIdx = i;
-        break;
-      }
-    }
-    setPaused(false);
-    setIndex(liveIdx);
-  };
 
   useEffect(() => {
     pausedRef.current = paused;
