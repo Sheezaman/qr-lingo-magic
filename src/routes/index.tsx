@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import aalimLogo from "@/assets/aalim-logo.png.asset.json";
 import { SOURCE_PHRASES, TRANSLATIONS, RTL_LANGS, type LangKey } from "@/lib/khutbah-data";
 import { VOICE_AUDIO, VOICE_DURATIONS, VOICE_STARTS } from "@/lib/khutbah-audio";
+import { Button } from "@/components/ui/button";
 
 function BrandHeader() {
   return (
@@ -22,6 +23,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Scan, choose your language, and follow along with a live translation." },
       { property: "og:title", content: "Live Translation" },
       { property: "og:description", content: "Scan, choose your language, and follow along with a live translation." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Index,
@@ -150,7 +153,7 @@ function ModePicker({ lang, onPick, onBack }: { lang: LangKey; onPick: (m: Mode)
           </span>
           <span>
             <span className="block text-[16px] font-semibold text-foreground">Voice translation</span>
-            <span className="block text-xs text-muted-foreground">Listen to the live translation with text</span>
+             <span className="block text-xs text-muted-foreground">Listen to the live translation</span>
           </span>
         </button>
       </div>
@@ -251,110 +254,83 @@ function VoiceTranslationView({ lang, onStop }: { lang: LangKey; onStop: () => v
   }, [index, lang]);
 
   const finished = index >= SOURCE_PHRASES.length;
-  const currentIdx = Math.min(index, SOURCE_PHRASES.length - 1);
-  const rtl = RTL_LANGS.includes(lang);
-
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-64px)] max-w-md flex-col">
-      <header className="sticky top-0 z-10 border-b border-border/60 bg-[hsl(150,20%,97%)]/90 px-5 py-3 backdrop-blur">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2.5 w-2.5">
-              {!paused && !finished && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[hsl(160,55%,40%)] opacity-60" />
-              )}
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[hsl(160,55%,40%)]" />
-            </span>
-            <span className="text-sm font-medium text-foreground">
-              {finished ? "Finished" : paused ? "Paused" : "Speaking…"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
+     <div className="voice-stage mx-auto flex min-h-[calc(100svh-64px)] max-w-md flex-col overflow-hidden px-5">
+       <header className="flex items-center justify-center gap-3 pt-4" aria-label="Playback controls">
+             <Button
+               variant="outline"
+               size="icon"
               onClick={() => {
                 setPaused(false);
                 setIndex(0);
               }}
               aria-label="Start from the beginning"
               title="Start from the beginning"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[hsl(160,55%,35%)] shadow-sm ring-1 ring-black/5 transition active:scale-95"
+               className="h-11 w-11 rounded-full border-voice-line bg-card text-primary shadow-sm"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 12a9 9 0 1 0 3-6.7" />
                 <path d="M3 4v5h5" />
               </svg>
-            </button>
-            <button
+             </Button>
+             <Button
               onClick={() => setPaused((p) => !p)}
               disabled={finished}
               aria-label={paused ? "Play" : "Pause"}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-[hsl(160,55%,35%)] text-white shadow-sm transition active:scale-95 disabled:opacity-40"
+               title={paused ? "Play" : "Pause"}
+               className="h-11 w-11 rounded-full bg-primary text-primary-foreground shadow-sm"
             >
               {paused ? (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
               ) : (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
               )}
-            </button>
-            <button
+             </Button>
+             <Button
+               variant="outline"
               onClick={goLive}
               disabled={finished}
               aria-label="Go to live translation"
               title="Go to live translation"
-              className="flex items-center gap-1.5 rounded-full bg-white px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-[hsl(160,55%,35%)] shadow-sm ring-1 ring-black/5 transition active:scale-95 disabled:opacity-40"
+               className="h-11 rounded-full border-voice-line bg-card px-4 text-xs font-semibold text-primary shadow-sm"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                 <circle cx="12" cy="12" r="2" fill="currentColor" />
                 <path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14" />
               </svg>
               Live
-            </button>
-            <div className="flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 text-xs font-medium text-foreground shadow-sm">
-              <span>{meta.flag}</span>
-              <span>{meta.label}</span>
-            </div>
-          </div>
-        </div>
+             </Button>
       </header>
 
-      <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-8 text-center">
-        <div className="mb-6 flex items-end gap-1.5">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <span
-              key={i}
-              className="w-1.5 rounded-full bg-[hsl(160,55%,40%)]"
-              style={{
-                height: paused || finished ? 10 : 14 + ((i * 11) % 26),
-                opacity: paused || finished ? 0.35 : 0.9,
-                transition: "height 300ms ease",
-              }}
-            />
-          ))}
+       <div className="flex min-h-[230px] flex-1 items-center justify-center py-5">
+         <div className={`voice-orb-halo ${paused || finished ? "voice-orb-still" : ""}`} aria-hidden="true">
+           <div className="voice-orb" />
         </div>
+       </div>
 
-        <p dir="rtl" className="font-arabic text-[17px] leading-relaxed text-muted-foreground/80">
-          {SOURCE_PHRASES[currentIdx]}
-        </p>
-        <p
-          dir={rtl ? "rtl" : "ltr"}
-          className="mt-4 text-[20px] font-semibold leading-snug text-foreground"
-        >
-          {TRANSLATIONS[lang][currentIdx]}
-        </p>
-
-        {error && <p className="mt-6 text-sm text-destructive">{error}</p>}
-        {finished && <p className="mt-6 text-sm text-muted-foreground">The live session has ended.</p>}
+       <div className="flex flex-col items-center text-center">
+         <div className="inline-flex min-w-36 items-center justify-center gap-3 rounded-full border border-voice-line bg-card px-5 py-2.5 text-base font-semibold text-foreground shadow-sm" aria-label={`Selected language: ${meta.label}`}>
+           <span aria-hidden="true">{meta.flag}</span><span>{meta.label}</span>
+         </div>
+         <p className="mt-6 flex items-center justify-center gap-2 text-base font-semibold text-foreground" role="status">
+           <span className={`h-2.5 w-2.5 rounded-full ${paused || finished || error ? "bg-muted-foreground" : "bg-voice-active animate-pulse"}`} />
+           {error ? "Playback unavailable" : finished ? "Translation finished" : paused ? "Paused" : "Listening & Translating"}
+         </p>
+         <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
+           {finished ? "The live session has ended." : paused ? "Press play to continue listening." : "You will hear the translation in your selected language"}
+         </p>
+         {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 mx-auto max-w-md px-4 pb-5">
-        <div className="flex justify-center">
-          <button
-            onClick={onStop}
-            className="rounded-full bg-[hsl(0,80%,96%)] px-8 py-3 text-sm font-semibold text-[hsl(0,75%,50%)] shadow-sm transition active:scale-95"
-          >
-            Stop Translating
-          </button>
-        </div>
+       <div className="flex justify-center pb-[max(28px,env(safe-area-inset-bottom))] pt-12">
+         <Button
+           variant="outline"
+           onClick={onStop}
+           className="h-12 gap-3 rounded-full border-voice-stop-border bg-voice-stop-bg px-7 text-base font-semibold text-destructive shadow-sm hover:bg-voice-stop-bg"
+         >
+           <span className="h-3.5 w-3.5 rounded-[2px] bg-destructive" aria-hidden="true" />
+           Stop
+         </Button>
       </div>
     </div>
   );
